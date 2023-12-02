@@ -15,6 +15,9 @@ public class Day02 {
 
         games.getGames().forEach(System.out::println);
 
-        System.out.println(Sum.ofInts(games.getValidGameIds(12, 13, 14)));
+        System.out.println("Part 01: " + Sum.ofInts(games.getValidGameIds(12, 13, 14)));
+        System.out.println("Part 02: " + Sum.ofInts(games.getMinimumConfigurations().stream()
+                .map(cubeConfig -> cubeConfig.red() * cubeConfig.green() * cubeConfig.blue())
+                .toList()));
     }
 }

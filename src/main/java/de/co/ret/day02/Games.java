@@ -24,4 +24,9 @@ public class Games {
                 .toList();
     }
 
+    public List<CubeConfiguration> getMinimumConfigurations() {
+        return this.games.stream()
+                .map(Game::getMinimumConfiguration)
+                .toList();
+    }
 }
