@@ -13,6 +13,8 @@ public class Day02 {
 
         var games = Games.fromLines(lines);
 
-        System.out.println(Sum.ofInts(games.getValidGameIds()));
+        games.getGames().forEach(System.out::println);
+
+        System.out.println(Sum.ofInts(games.getValidGameIds(12, 13, 14)));
     }
 }
