@@ -1,5 +1,7 @@
 package de.co.ret.day01;
 
+import de.co.ret.common.Sum;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -9,6 +11,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 class Calibration {
+
+    public List<Integer> getValues() {
+        return values;
+    }
 
     private final List<Integer> values;
 
@@ -66,9 +72,5 @@ class Calibration {
 
     public static Calibration fromLines(List<String> lines) throws URISyntaxException, IOException {
         return new Calibration(lines);
-    }
-
-    public int getSum() {
-        return this.values.stream().reduce(Integer::sum).orElse(0);
     }
 }

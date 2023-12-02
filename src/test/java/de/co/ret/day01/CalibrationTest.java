@@ -1,5 +1,6 @@
 package de.co.ret.day01;
 
+import de.co.ret.common.Sum;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,7 +16,7 @@ class CalibrationTest {
     void should_return_0_for_empty_lines() {
         Calibration calibration = Calibration.fromLines(List.of());
 
-        assertThat(calibration.getSum()).isEqualTo(0);
+        assertThat(Sum.ofInts(calibration.getValues())).isEqualTo(0);
     }
 
     @Test
@@ -28,7 +29,7 @@ class CalibrationTest {
                 "treb7uchet"
         ));
 
-        assertThat(calibration.getSum()).isEqualTo(142);
+        assertThat(Sum.ofInts(calibration.getValues())).isEqualTo(142);
     }
 
     @Test
@@ -44,7 +45,7 @@ class CalibrationTest {
                 "7pqrstsixteen"
         ));
 
-        assertThat(calibration.getSum()).isEqualTo(281);
+        assertThat(Sum.ofInts(calibration.getValues())).isEqualTo(281);
     }
 
     @Test
