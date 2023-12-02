@@ -64,7 +64,8 @@ class CalibrationTest {
             "xtwone3four, 24",
             "4nineeightseven2, 42",
             "zoneight234, 14",
-            "7pqrstsixteen, 76"
+            "7pqrstsixteen, 76",
+            "oneight, 18",
     })
     void should_clean_also_number_words(String input, String expected) {
         assertThat(Calibration.cleanValue(input)).isEqualTo(expected);

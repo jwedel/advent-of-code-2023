@@ -43,7 +43,7 @@ class Calibration {
 
     private static String replaceNumberStrings(String value) {
         var result = new StringBuilder();
-        for (int i = 0; i < value.length();) {
+        for (int i = 0; i < value.length();i++) {
 
             final int offset = i;
 
@@ -53,10 +53,8 @@ class Calibration {
             if(digitMatch.isPresent()) {
                 Map.Entry<String, String> digitEntry = digitMatch.get();
                 result.append(digitEntry.getValue());
-                i += digitEntry.getKey().length();
             } else{
                 result.append(value.charAt(i));
-                i++;
             }
         }
         return result.toString();
