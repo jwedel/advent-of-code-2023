@@ -2,8 +2,6 @@ package de.co.ret.day02;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GameTest {
@@ -36,7 +34,7 @@ class GameTest {
 
     @Test
     void should_return_false_if_invalid_configuration() {
-        var game = Game.parse("Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue");
+        var game = Game.parse("Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red");
 
         assertThat(game.isValidForConfiguration(12,13,14)).isFalse();
     }

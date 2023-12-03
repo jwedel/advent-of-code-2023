@@ -2,16 +2,7 @@ package de.co.ret.day02;
 
 import java.util.List;
 
-public class Games {
-    private final List<Game> games;
-
-    public List<Game> getGames() {
-        return games;
-    }
-
-    public Games(List<Game> games) {
-        this.games = games;
-    }
+public record Games(List<Game> games) {
 
     public static Games fromLines(List<String> lines) {
         return new Games(lines.stream().map(Game::parse).toList());

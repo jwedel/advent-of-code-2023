@@ -1,20 +1,15 @@
 package de.co.ret.day01;
 
-import de.co.ret.common.Sum;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Getter
 class Calibration {
-
-    public List<Integer> getValues() {
-        return values;
-    }
 
     private final List<Integer> values;
 
@@ -30,7 +25,7 @@ class Calibration {
             "nine", "9"
     );
 
-    private Calibration(List<String> lines) throws IOException {
+    private Calibration(List<String> lines) {
         this.values = lines
                 .stream()
                 .map(Calibration::cleanValue)
@@ -70,7 +65,7 @@ class Calibration {
         return Character.isDigit(codePoint);
     }
 
-    public static Calibration fromLines(List<String> lines) throws URISyntaxException, IOException {
+    public static Calibration fromLines(List<String> lines) {
         return new Calibration(lines);
     }
 }
