@@ -25,6 +25,29 @@ class SchematicTest {
 
         var schematic = Schematic.fromLines(schematicLines);
 
-        assertThat(schematic.getPartIds()).containsOnly(467, 35,633,617,592,755,664,598);
+        assertThat(schematic.getPartIds()).containsOnly(467, 35, 633, 617, 592, 755, 664, 598);
+    }
+
+    @Test
+    void should_return_gears() {
+        List<String> schematicLines = List.of(
+                "467..114..",
+                "...*......",
+                "..35..633.",
+                "......#...",
+                "617*......",
+                ".....+.58.",
+                "..592.....",
+                "......755.",
+                "...$.*....",
+                ".664.598.."
+        );
+
+        var schematic = Schematic.fromLines(schematicLines);
+
+        assertThat(schematic.getGears()).containsOnly(
+                new Gears(467, 35),
+                new Gears(755, 598));
+
     }
 }
