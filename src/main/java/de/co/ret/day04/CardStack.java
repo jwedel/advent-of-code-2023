@@ -2,8 +2,6 @@ package de.co.ret.day04;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CardStack {
     private final List<Card> cards;
@@ -31,12 +29,10 @@ public class CardStack {
 
         for (int currentCard = 0; currentCard < cards.size(); currentCard++) {
             var currentCardInstances = cardInstances[currentCard];
-            for(int instance = 0; instance < currentCardInstances; instance++) {
-                Card card = cards.get(currentCard);
-                int matchingNumbers = card.getMatchingNumbers();
-                for (int matchingNumber = 0; matchingNumber < matchingNumbers; matchingNumber++) {
-                    cardInstances[currentCard + matchingNumber + 1] += 1;
-                }
+            Card card = cards.get(currentCard);
+            int matchingNumbers = card.getMatchingNumbers();
+            for (int matchingNumber = 0; matchingNumber < matchingNumbers; matchingNumber++) {
+                cardInstances[currentCard + matchingNumber + 1] += currentCardInstances;
             }
         }
 
