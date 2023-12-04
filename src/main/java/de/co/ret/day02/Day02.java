@@ -4,8 +4,6 @@ import de.co.ret.common.FileHelper;
 import de.co.ret.common.Sum;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 public class Day02 {
@@ -13,7 +11,7 @@ public class Day02 {
     public static void main(String[] args) {
         List<String> lines = FileHelper.readAoCFile("02");
 
-        var games = Games.fromLines(lines);
+        var games = GamesCollection.fromLines(lines);
 
         games.games().forEach(System.out::println);
 

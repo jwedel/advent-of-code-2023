@@ -1,22 +1,44 @@
 package de.co.ret.day02;
 
+import de.co.ret.day02.model.CubeConfigurationExpression;
+import de.co.ret.day02.model.GameExpression;
+import org.modelcc.io.ModelReader;
+import org.modelcc.io.java.JavaLanguageReader;
+import org.modelcc.language.metamodel.LanguageElement;
+import org.modelcc.language.metamodel.LanguageModel;
+import org.modelcc.metamodel.Model;
+import org.modelcc.parser.Parser;
+import org.modelcc.parser.ParserFactory;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 public record Game(int id, List<CubeConfiguration> revelations) {
     public static Game parse(String line) {
-        var tokens = Stream.of(line.split(":")).map(String::trim).toList();
+        try {
+            Parser<GameExpression> parser = createParser();
 
-        return new Game(
-                toGameId(tokens.getFirst()),
-                toCubeRevelations(tokens.getLast()));
+            GameExpression gameExpression = parser.parse(line);
+
+            return new Game(
+                    gameExpression.getId().getValue(),
+                    toCubeRevelations(gameExpression.getRevelations()));
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
-    private static List<CubeConfiguration> toCubeRevelations(String revelationsString) {
-        return Arrays.stream(revelationsString.split(";"))
-                .map(String::trim)
-                .map(CubeConfiguration::parse)
+    private static Parser<GameExpression> createParser() throws Exception {
+        ModelReader<LanguageModel> reader = new JavaLanguageReader(GameExpression.class);
+        Model<LanguageElement> model = reader.read();
+        Parser<GameExpression> parser = ParserFactory.create(model, ParserFactory.WHITESPACE);
+        return parser;
+    }
+
+    private static List<CubeConfiguration> toCubeRevelations(List<CubeConfigurationExpression> revelationExpressions) {
+        return revelationExpressions.stream()
+                .map(CubeConfiguration::fromExpression)
                 .toList();
     }
 

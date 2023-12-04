@@ -1,6 +1,15 @@
 package de.co.ret.day02;
 
+import de.co.ret.day02.model.GameExpression;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
+import org.modelcc.io.ModelReader;
+import org.modelcc.io.java.JavaLanguageReader;
+import org.modelcc.language.metamodel.LanguageElement;
+import org.modelcc.language.metamodel.LanguageModel;
+import org.modelcc.metamodel.Model;
+import org.modelcc.parser.Parser;
+import org.modelcc.parser.ParserFactory;
 
 import java.util.List;
 
@@ -16,7 +25,7 @@ class GamesTest {
                 "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
                 "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
         );
-        var games = Games.fromLines(lines);
+        var games = GamesCollection.fromLines(lines);
 
         assertThat(games.getValidGameIds(12, 13, 14)).containsOnly(
                 1,
