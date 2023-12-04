@@ -28,13 +28,17 @@ public record Card(int cardId, List<Integer> winningNumbers, List<Integer> myNum
     }
 
     public int calculatePoints() {
-        long matchingNumbers = myNumbers.stream()
-                .filter(winningNumbers::contains)
-                .count();
+        long matchingNumbers = getMatchingNumbers();
         if (matchingNumbers == 0) {
             return 0;
         }
 
         return (int) Math.pow(2, matchingNumbers - 1);
+    }
+
+    public int getMatchingNumbers() {
+        return (int)myNumbers.stream()
+                .filter(winningNumbers::contains)
+                .count();
     }
 }

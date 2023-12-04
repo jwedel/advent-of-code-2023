@@ -17,5 +17,6 @@ public class Day04 {
         CardStack cardStack = CardStack.fromLines(lines);
 
         System.out.println("Part 01: " + cardStack.calculateTotalPoints());
+        System.out.println("Part 02: " + cardStack.calculateScratchCardInstances());
     }
 }
