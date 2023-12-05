@@ -1,7 +1,6 @@
 package de.co.ret.day05;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public record AlmanacCategory(String categoryName, List<AlmanacEntry> entries) {
