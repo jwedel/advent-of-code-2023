@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static de.co.ret.day05.Day05.ParserState.*;
@@ -28,7 +29,26 @@ public class Day05 {
                 .map(AlmanacMatch::destinationId)
                 .reduce(Long.MAX_VALUE, Long::min);
 
-        System.out.println("Day 05: " + minimumLocationId);
+        System.out.println("Day 05, Part 1: " + minimumLocationId);
+
+        var seedRanges = SeedRanges.fromPairList(seeds);
+        var mergedRanges = SeedRanges.mergeRanges(seedRanges);
+
+        System.out.println(mergedRanges);
+
+        minimumLocationId = toSeedStream(mergedRanges).map(seedStream -> seedStream
+                        .map(almanac::getLastDestinationId)
+                        .reduce(Long.MAX_VALUE, Long::min))
+                .reduce(Long.MAX_VALUE, Long::min);
+
+        System.out.println("Day 05, Part 2: " + minimumLocationId);
+
+    }
+
+    private static Stream<LongStream> toSeedStream(List<SeedRange> seedRanges) {
+        return seedRanges.parallelStream()
+                .map(seedRange -> LongStream
+                        .range(seedRange.startId(), seedRange.startId() + seedRange.rangeLength()));
     }
 
     private static Tuple<List<Long>, Almanac> fromLines(List<String> lines) {
@@ -82,8 +102,5 @@ public class Day05 {
         SEEDS,
         CATEGORY,
         ENTRIES
-    }
-
-    private record Tuple<T1, T2>(T1 first, T2 second) {
     }
 }

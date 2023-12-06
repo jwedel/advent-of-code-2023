@@ -14,4 +14,14 @@ public record Almanac(List<AlmanacCategory> categories) {
         }
         return matchTrace;
     }
+
+    public long getLastDestinationId(long sourceId) {
+        long destinationId = sourceId;
+
+        for (AlmanacCategory category : categories) {
+            destinationId = category.getDestinationId(destinationId);
+        }
+
+        return destinationId;
+    }
 }

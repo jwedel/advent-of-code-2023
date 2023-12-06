@@ -55,6 +55,7 @@ class AlmanacTest {
                         new AlmanacMatch("temperature-to-humidity", 78, 78),
                         new AlmanacMatch("humidity-to-location", 78, 82)
                 ));
+        assertThat(almanac.getLastDestinationId(79)).isEqualTo(82);
 
         assertThat(almanac.getDirectMapping(14)).isEqualTo(
                 List.of(
@@ -67,6 +68,9 @@ class AlmanacTest {
                         new AlmanacMatch("humidity-to-location", 43, 43)
                 ));
 
+        assertThat(almanac.getLastDestinationId(14)).isEqualTo(43);
+
+
         assertThat(almanac.getDirectMapping(55)).isEqualTo(
                 List.of(
                         new AlmanacMatch("seed-to-soil", 55, 57),
@@ -78,6 +82,9 @@ class AlmanacTest {
                         new AlmanacMatch("humidity-to-location", 82, 86)
                 ));
 
+        assertThat(almanac.getLastDestinationId(55)).isEqualTo(86);
+
+
         assertThat(almanac.getDirectMapping(13)).isEqualTo(
                 List.of(
                         new AlmanacMatch("seed-to-soil", 13, 13),
@@ -88,5 +95,7 @@ class AlmanacTest {
                         new AlmanacMatch("temperature-to-humidity", 34, 35),
                         new AlmanacMatch("humidity-to-location", 35, 35)
                 ));
+
+        assertThat(almanac.getLastDestinationId(13)).isEqualTo(35);
     }
 }
