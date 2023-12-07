@@ -40,7 +40,7 @@ class GameTest {
     }
 
     @Test
-    void shoud_return_other_minimum_configuration() {
+    void should_return_other_minimum_configuration() {
         var game = Game.parse("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green");
 
         CubeConfiguration minimumConfiguration = game.getMinimumConfiguration();
@@ -51,7 +51,7 @@ class GameTest {
     }
 
     @Test
-    void shoud_return_minimum_configuration() {
+    void should_return_minimum_configuration() {
         var game = Game.parse("Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red");
 
         CubeConfiguration minimumConfiguration = game.getMinimumConfiguration();

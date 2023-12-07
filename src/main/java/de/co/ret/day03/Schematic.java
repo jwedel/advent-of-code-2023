@@ -25,7 +25,7 @@ public class Schematic {
         var state = OTHER;
         var isValidPartId = false;
         var numberString = new StringBuilder();
-        ;
+
         for (int y = 0; y < getMaxY(); y++) {
             for (int x = 0; x < getMaxX(); x++) {
                 Character currentPoint = getPoint(x, y).orElse('.');

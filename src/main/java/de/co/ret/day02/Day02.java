@@ -4,8 +4,6 @@ import de.co.ret.common.FileHelper;
 import de.co.ret.common.Sum;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 public class Day02 {
