@@ -11,7 +11,7 @@ class RaceRecordTest {
 
         var options = record.calculateAllRaceOptions();
 
-        assertThat(options).containsOnly(0);
+        assertThat(options).containsOnly(0L);
     }
 
     @Test
@@ -21,10 +21,10 @@ class RaceRecordTest {
         var options = record.calculateAllRaceOptions();
 
         assertThat(options).containsOnly(
-                0,
-                2,
-                2,
-                0
+                0L,
+                2L,
+                2L,
+                0L
         );
     }
 
@@ -35,14 +35,14 @@ class RaceRecordTest {
         var options = record.calculateAllRaceOptions();
 
         assertThat(options).containsOnly(
-                0,
-                6,
-                10,
-                12,
-                12,
-                10,
-                6,
-                0
+                0L,
+                6L,
+                10L,
+                12L,
+                12L,
+                10L,
+                6L,
+                0L
         );
     }
 
@@ -53,10 +53,10 @@ class RaceRecordTest {
         var options = record.calculateWinningDistances();
 
         assertThat(options).containsOnly(
-                10,
-                12,
-                12,
-                10
+                10L,
+                12L,
+                12L,
+                10L
         );
     }
 }

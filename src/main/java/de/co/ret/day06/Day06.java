@@ -10,10 +10,9 @@ public class Day06 {
     public static void main(String[] args) {
         List<String> lines = FileHelper.readAoCFile("06");
 
-        System.out.println("Result Day 05, Part 1: " + RaceStats.fromLines(lines)
-                .parallelStream()
-                .map(RaceRecord::calculateWinningDistances)
-                .map(List::size)
-                .reduce(1, (accumulator, element) -> accumulator * element));
+        System.out.println("Result Day 06, Part 2: " + RaceStats.fromLines(lines)
+                .calculateWinningDistances()
+                .size());
+
     }
 }
