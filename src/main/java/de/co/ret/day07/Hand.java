@@ -1,19 +1,39 @@
 package de.co.ret.day07;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public record Hand(List<Card> cards) implements Comparable<Hand> {
+@Getter
+@ToString(exclude = {"type", "hasJoker", "handWithJokers"})
+@EqualsAndHashCode(exclude = {"type", "hasJoker", "handWithJokers"})
+public final class Hand implements Comparable<Hand> {
+    private final List<Card> cards;
+    private final HandType type;
+    private final boolean hasJoker;
+    private final Hand handWithJokers;
+
+    public Hand(List<Card> cards) {
+        this.cards = cards;
+        this.hasJoker = cards.stream().anyMatch(Card.JOKER::equals);
+        this.handWithJokers = calculateWithJokers();
+        this.type = calculateType();
+    }
+
     public static Hand parse(String handString) {
         return new Hand(Arrays.stream(handString.split("")).map(Card::parse).toList());
     }
 
-    public HandType getType() {
-        var distinctCards = cards.stream().collect(Collectors.groupingBy(Function.identity()));
+    private HandType calculateType() {
+        var distinctCards = groupByType();
 
         return switch (distinctCards.size()) {
             case 5 -> HandType.HIGH_CARD;
@@ -35,6 +55,10 @@ public record Hand(List<Card> cards) implements Comparable<Hand> {
         };
     }
 
+    private Map<Card, List<Card>> groupByType() {
+        return cards.stream().collect(Collectors.groupingBy(Function.identity()));
+    }
+
 
     @Override
     public int compareTo(Hand other) {
@@ -42,7 +66,7 @@ public record Hand(List<Card> cards) implements Comparable<Hand> {
             return 0;
         }
 
-        int comparisonByType = this.getType().compareTo(other.getType());
+        int comparisonByType = this.withJokers().getType().compareTo(other.withJokers().getType());
 
         if (comparisonByType != 0) {
             return comparisonByType;
@@ -53,5 +77,26 @@ public record Hand(List<Card> cards) implements Comparable<Hand> {
                 .filter(cardComparison -> cardComparison != 0)
                 .findFirst()
                 .orElse(0);
+    }
+
+    public Hand withJokers() {
+        return this.handWithJokers;
+    }
+
+    private Hand calculateWithJokers() {
+        if (!hasJoker) {
+            return this;
+        }
+
+        var distinctCards = groupByType();
+        Card maxGroupCard = distinctCards.entrySet().stream()
+                .filter(entry -> !entry.getKey().equals(Card.JOKER))
+                .max(Comparator.comparingInt(a -> a.getValue().size()))
+                .map(Map.Entry::getKey)
+                .orElse(Card.ACE);
+
+        return new Hand(this.cards.stream()
+                .map(card -> card.equals(Card.JOKER) ? maxGroupCard : card)
+                .toList());
     }
 }

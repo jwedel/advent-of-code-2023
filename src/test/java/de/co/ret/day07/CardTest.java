@@ -10,6 +10,7 @@ class CardTest {
         assertThat(Card.ACE).isGreaterThan(Card.KING);
         assertThat(Card.KING).isGreaterThan(Card.QUEEN);
         assertThat(Card.FIVE).isGreaterThan(Card.TWO);
+        assertThat(Card.TWO).isGreaterThan(Card.JOKER);
     }
 
     @Test
@@ -17,7 +18,7 @@ class CardTest {
         assertThat(Card.parse("A")).isEqualTo(Card.ACE);
         assertThat(Card.parse("K")).isEqualTo(Card.KING);
         assertThat(Card.parse("Q")).isEqualTo(Card.QUEEN);
-        assertThat(Card.parse("J")).isEqualTo(Card.JACK);
+        assertThat(Card.parse("J")).isEqualTo(Card.JOKER);
         assertThat(Card.parse("T")).isEqualTo(Card.TEN);
         assertThat(Card.parse("9")).isEqualTo(Card.NINE);
         assertThat(Card.parse("8")).isEqualTo(Card.EIGHT);

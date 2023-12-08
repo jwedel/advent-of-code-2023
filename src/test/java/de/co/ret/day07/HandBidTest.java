@@ -13,7 +13,7 @@ class HandBidTest {
         HandBid hand = HandBid.parse("AATKJ 840");
 
         assertThat(hand).isEqualTo(new HandBid(new Hand(
-                List.of(ACE, ACE, TEN, KING, JACK)),
+                List.of(ACE, ACE, TEN, KING, JOKER)),
                 840
         ));
     }

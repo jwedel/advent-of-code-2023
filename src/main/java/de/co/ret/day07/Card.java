@@ -1,6 +1,7 @@
 package de.co.ret.day07;
 
 public enum Card {
+    JOKER,
     TWO,
     THREE,
     FOUR,
@@ -10,7 +11,6 @@ public enum Card {
     EIGHT,
     NINE,
     TEN,
-    JACK,
     QUEEN,
     KING,
     ACE;
@@ -20,7 +20,7 @@ public enum Card {
             case "A" -> ACE;
             case "K" -> KING;
             case "Q" -> QUEEN;
-            case "J" -> JACK;
+            case "J" -> JOKER;
             case "T" -> TEN;
             case "9" -> NINE;
             case "8" -> EIGHT;

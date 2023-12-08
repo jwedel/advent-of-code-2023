@@ -19,7 +19,7 @@ class HandTest {
             Hand hand = Hand.parse("AATKJ");
 
             assertThat(hand).isEqualTo(new Hand(
-                    List.of(ACE, ACE, TEN, KING, JACK)
+                    List.of(ACE, ACE, TEN, KING, JOKER)
             ));
         }
     }
@@ -111,11 +111,49 @@ class HandTest {
             assertThat(Hand.parse("AAAAA")).isGreaterThan(Hand.parse("KKKKK"));
             assertThat(Hand.parse("77777")).isLessThan(Hand.parse("KKKKK"));
 
-            assertThat(Hand.parse("KK677")).isGreaterThan(Hand.parse("KTJJT"));
-            assertThat(Hand.parse("T55J5")).isLessThan(Hand.parse("QQQJA"));
+            assertThat(Hand.parse("KTJJT")).isGreaterThan(Hand.parse("KK677"));
+            assertThat(Hand.parse("QQQJA")).isGreaterThan(Hand.parse("T55J5"));
 
             assertThat(Hand.parse("KT972")).isGreaterThan(Hand.parse("27A83"));
 
+        }
+    }
+
+    @Nested
+    class UseJokers {
+        @Test
+        void should_leave_unchanged_when_no_jokers() {
+            Hand hand = Hand.parse("32T3K").withJokers();
+
+            assertThat(hand).isEqualTo(Hand.parse("32T3K"));
+        }
+
+        @Test
+        void should_replace_jokers_to_get_Four_of_a_kind() {
+            Hand hand = Hand.parse("T55J5").withJokers();
+
+            assertThat(hand).isEqualTo(Hand.parse("T5555"));
+        }
+
+        @Test
+        void should_replace_jokers_to_get_Four_of_a_kind_2() {
+            Hand hand = Hand.parse("KTJJT").withJokers();
+
+            assertThat(hand).isEqualTo(Hand.parse("KTTTT"));
+        }
+
+        @Test
+        void should_replace_jokers_to_get_Four_of_a_kind_3() {
+            Hand hand = Hand.parse("QQQJA").withJokers();
+
+            assertThat(hand).isEqualTo(Hand.parse("QQQQA"));
+        }
+
+        @Test
+        void should_replace_only_jokers_to_get_Five_of_a_kind() {
+            Hand hand = Hand.parse("JJJJJ").withJokers();
+
+            assertThat(hand).isEqualTo(Hand.parse("AAAAA"));
         }
     }
 }

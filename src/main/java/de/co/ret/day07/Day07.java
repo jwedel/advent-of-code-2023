@@ -20,7 +20,7 @@ public class Day07 {
         handBids.forEach(System.out::println);
 
 
-        System.out.println("Day 07, Part 1: " + IntStream.range(0, handBids.size())
+        System.out.println("Day 07, Part 2: " + IntStream.range(0, handBids.size())
                 .mapToLong(index -> (1L + index) * handBids.get(index).bid())
                 .reduce(Long::sum).orElse(0));
     }
