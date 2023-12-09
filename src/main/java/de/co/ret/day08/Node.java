@@ -8,11 +8,11 @@ import lombok.*;
 @EqualsAndHashCode(exclude = {"left", "right"})
 @ToString(exclude = {"left", "right"})
 public class Node<T> {
-    private Node left;
-    private Node right;
+    private Node<T> left;
+    private Node<T> right;
     private final T value;
 
-    static <T> Node<T> of(Node left, Node right, T value) {
+    static <T> Node<T> of(Node<T> left, Node<T> right, T value) {
         Node<T> node = new Node<>(value);
         node.setLeft(left);
         node.setRight(right);

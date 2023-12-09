@@ -22,7 +22,7 @@ class MapDocumentTest {
                 "EEE = (EEE, EEE)",
                 "GGG = (GGG, GGG)",
                 "ZZZ = (ZZZ, ZZZ)"
-        ), (a -> true), (a -> true));
+        ), (a -> true));
 
         var ZZZ = Node.of(null, null, "ZZZ");
         var GGG = Node.of(null, null, "GGG");
@@ -42,13 +42,13 @@ class MapDocumentTest {
                 new MapDocument(
                         List.of(RIGHT, LEFT, RIGHT, RIGHT, LEFT),
                         Map.of(
-                                "AAA", Node.of(BBB, CCC, "AAA"),
-                                "BBB", Node.of(DDD, EEE, "BBB"),
-                                "CCC", Node.of(ZZZ, GGG, "CCC"),
-                                "DDD", Node.of(DDD, DDD, "DDD"),
-                                "EEE", Node.of(EEE, EEE, "EEE"),
-                                "GGG", Node.of(GGG, GGG, "GGG"),
-                                "ZZZ", Node.of(ZZZ, ZZZ, "ZZZ")
+                                "AAA", AAA,
+                                "BBB", BBB,
+                                "CCC", CCC,
+                                "DDD", DDD,
+                                "EEE", EEE,
+                                "GGG", GGG,
+                                "ZZZ", ZZZ
                         ),
                         List.of())
 
@@ -68,28 +68,47 @@ class MapDocumentTest {
                         "GGG = (GGG, GGG)",
                         "ZZZ = (ZZZ, ZZZ)"
                 ),
-                (node -> node.equals("AAA")),
-                (node -> node.equals("ZZZ"))
+                (node -> node.equals("AAA"))
         );
 
-        List<Long> stepsList = mapDocument.stepsToWalkTo("ZZZ"::equals);
-        assertThat(stepsList).containsOnly(2L);
+        var steps = mapDocument.stepsToWalkTo("ZZZ"::equals);
+        assertThat(steps).isEqualTo(2L);
     }
 
     @Test
     void should_return_correct_number_of_steps_for_given_directions_including_retries() {
         MapDocument mapDocument = MapDocument.fromLines(List.of(
-                "LLR",
-                "",
-                "AAA = (BBB, BBB)",
-                "BBB = (AAA, ZZZ)",
-                "ZZZ = (ZZZ, ZZZ)"
+                        "LLR",
+                        "",
+                        "AAA = (BBB, BBB)",
+                        "BBB = (AAA, ZZZ)",
+                        "ZZZ = (ZZZ, ZZZ)"
                 ),
-                (node -> node.equals("AAA")),
-                (node -> node.equals("ZZZ"))
+                (node -> node.equals("AAA"))
         );
 
-        List<Long> stepsList = mapDocument.stepsToWalkTo("ZZZ"::equals);
-        assertThat(stepsList).containsOnly(6L);
+        var steps = mapDocument.stepsToWalkTo("ZZZ"::equals);
+        assertThat(steps).isEqualTo(6L);
+    }
+
+    @Test
+    void should_return_correct_number_of_steps_for_given_directions_including_retries_for_multiple_paths() {
+        MapDocument mapDocument = MapDocument.fromLines(List.of(
+                        "LR",
+                        "",
+                        "11A = (11B, XXX)",
+                        "11B = (XXX, 11Z)",
+                        "11Z = (11B, XXX)",
+                        "22A = (22B, XXX)",
+                        "22B = (22C, 22C)",
+                        "22C = (22Z, 22Z)",
+                        "22Z = (22B, 22B)",
+                        "XXX = (XXX, XXX)"
+                ),
+                (node -> node.endsWith("A"))
+        );
+
+        var steps = mapDocument.stepsToWalkTo((node -> node.endsWith("Z")));
+        assertThat(steps).isEqualTo(6L);
     }
 }

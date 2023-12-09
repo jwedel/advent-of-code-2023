@@ -29,8 +29,7 @@ public final class MapDocument {
 
     public static MapDocument fromLines(
             List<String> lines,
-            Function<String, Boolean> startNodeSelector,
-            Function<String, Boolean> endNodeSelector) {
+            Function<String, Boolean> startNodeSelector) {
 
         List<Direction> parsedDirection = parseDirections(lines);
 
@@ -95,21 +94,25 @@ public final class MapDocument {
         return new Tuple<>(value, new Tuple<>(left, right));
     }
 
-    public List<Long> stepsToWalkTo(Function<String, Boolean> targetSelector) {
-        return this.startingNodes.stream()
-                .map(node -> recursiveStepsToWalkTo(targetSelector, node, 0))
-                .toList();
+    public long stepsToWalkTo(Function<String, Boolean> targetSelector) {
+        var currentNodes = startingNodes;
+        var steps = 0L;
+        while (!allReachedTarget(currentNodes, targetSelector)) {
+            var nextDirection = directions.get((int) (steps % directions.size()));
+
+            currentNodes = currentNodes.stream()
+                    .map(currentNode -> switch (nextDirection) {
+                        case LEFT -> currentNode.getLeft();
+                        case RIGHT -> currentNode.getRight();
+                    })
+                    .toList();
+
+            steps++;
+        }
+        return steps;
     }
 
-    private long recursiveStepsToWalkTo(Function<String, Boolean> targetSelector, Node<String> currentNode, int steps) {
-        if (targetSelector.apply(currentNode.getValue())) {
-            return steps;
-        }
-
-        var nextDirection = directions.get((steps) % directions.size());
-        return switch (nextDirection) {
-            case LEFT -> recursiveStepsToWalkTo(targetSelector, currentNode.getLeft(), steps + 1);
-            case RIGHT -> recursiveStepsToWalkTo(targetSelector, currentNode.getRight(), steps + 1);
-        };
+    private boolean allReachedTarget(List<Node<String>> nodes, Function<String, Boolean> targetSelector) {
+        return nodes.stream().allMatch(node -> targetSelector.apply(node.getValue()));
     }
 }
