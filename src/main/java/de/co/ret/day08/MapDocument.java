@@ -1,41 +1,67 @@
 package de.co.ret.day08;
 
 import de.co.ret.day05.Tuple;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public record MapDocument(List<Direction> directions, Node<String> nodeMap) {
+@RequiredArgsConstructor
+@Getter
+@EqualsAndHashCode(exclude = {"startingNodes"})
+@ToString
+public final class MapDocument {
 
     private static final Pattern NODE_PATTERN = Pattern.compile("^(?<value>\\w{3}) = \\((?<left>\\w{3}), (?<right>\\w{3})\\)$");
-    private static final String ROOT_NODE_NAME = "AAA";
-    private static final String TERMINATOR_NODE_NAME = "ZZZ";
-    private static final Node<String> TERMINATOR_NODE = Node.of(null, null, TERMINATOR_NODE_NAME);
 
-    public static MapDocument fromLines(List<String> lines) {
-        List<Direction> parsedDirection = Stream.of(lines.getFirst().split(""))
-                .map(Direction::parse)
+    private final List<Direction> directions;
+    private final Map<String, Node<String>> nodes;
+    private final List<Node<String>> startingNodes;
+
+    public static MapDocument fromLines(
+            List<String> lines,
+            Function<String, Boolean> startNodeSelector,
+            Function<String, Boolean> endNodeSelector) {
+
+        List<Direction> parsedDirection = parseDirections(lines);
+
+        Map<String, Tuple<String, String>> lookupMap = buildNodeNameLookupMap(lines);
+
+        var nodes = new HashMap<String, Node<String>>();
+
+        lookupMap.keySet().forEach(nodeName -> buildTreeFrom(nodeName, lookupMap, nodes));
+
+        var startingNodes = lookupMap.keySet().stream()
+                .filter(startNodeSelector::apply)
+                .map(startNodeName -> buildTreeFrom(startNodeName, lookupMap, nodes))
                 .toList();
 
-        Map<String, Tuple<String, String>> lookupMap = lines.stream()
+        return new MapDocument(parsedDirection, nodes, startingNodes);
+    }
+
+    private static Map<String, Tuple<String, String>> buildNodeNameLookupMap(List<String> lines) {
+        return lines.stream()
                 .skip(2)
                 .map(MapDocument::toNodeTuple)
                 .collect(Collectors.toMap(Tuple::first, Tuple::second));
-
-        var nodeCache = new HashMap<String, Node>();
-        nodeCache.put(TERMINATOR_NODE_NAME, TERMINATOR_NODE);
-
-        var rootNode = buildTreeFrom(ROOT_NODE_NAME, lookupMap, nodeCache);
-
-        return new MapDocument(parsedDirection, rootNode);
     }
 
-    private static Node<String> buildTreeFrom(String nodeName, Map<String, Tuple<String, String>> lookupMap, HashMap<String, Node> nodeCache) {
+    private static List<Direction> parseDirections(List<String> lines) {
+        return Stream.of(lines.getFirst().split(""))
+                .map(Direction::parse)
+                .toList();
+    }
+
+    private static Node<String> buildTreeFrom(String nodeName, Map<String, Tuple<String, String>> lookupMap, HashMap<String, Node<String>> nodeCache) {
         if (nodeName == null) {
             return null;
         }
@@ -69,19 +95,21 @@ public record MapDocument(List<Direction> directions, Node<String> nodeMap) {
         return new Tuple<>(value, new Tuple<>(left, right));
     }
 
-    public long stepsToWalkTo(String targetNodeName) {
-        return recursiveStepsToWalkTo(targetNodeName, this.nodeMap, 0);
+    public List<Long> stepsToWalkTo(Function<String, Boolean> targetSelector) {
+        return this.startingNodes.stream()
+                .map(node -> recursiveStepsToWalkTo(targetSelector, node, 0))
+                .toList();
     }
 
-    private long recursiveStepsToWalkTo(String targetNodeName, Node<String> currentNode, int steps) {
-        if (targetNodeName.equals(currentNode.getValue())) {
+    private long recursiveStepsToWalkTo(Function<String, Boolean> targetSelector, Node<String> currentNode, int steps) {
+        if (targetSelector.apply(currentNode.getValue())) {
             return steps;
         }
 
         var nextDirection = directions.get((steps) % directions.size());
         return switch (nextDirection) {
-            case LEFT -> recursiveStepsToWalkTo(targetNodeName, currentNode.getLeft(), steps + 1);
-            case RIGHT -> recursiveStepsToWalkTo(targetNodeName, currentNode.getRight(), steps + 1);
+            case LEFT -> recursiveStepsToWalkTo(targetSelector, currentNode.getLeft(), steps + 1);
+            case RIGHT -> recursiveStepsToWalkTo(targetSelector, currentNode.getRight(), steps + 1);
         };
     }
 }

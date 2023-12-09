@@ -1,6 +1,7 @@
 package de.co.ret.day08;
 
 import de.co.ret.common.FileHelper;
+import de.co.ret.common.Sum;
 import lombok.SneakyThrows;
 
 import java.util.List;
@@ -10,8 +11,11 @@ public class Day08 {
     public static void main(String[] args) {
         List<String> lines = FileHelper.readAoCFile("08");
 
-        MapDocument mapDocument = MapDocument.fromLines(lines);
+        MapDocument mapDocument = MapDocument.fromLines(
+                lines,
+                (nodeName -> nodeName.equals("AAA")),
+                (nodeName -> nodeName.equals("ZZZ")));
 
-        System.out.println("Day 08, Part 1: " + mapDocument.stepsToWalkTo("ZZZ"));
+        System.out.println("Day 08, Part 1: " + Sum.ofLongs(mapDocument.stepsToWalkTo("ZZZ"::equals)));
     }
 }
