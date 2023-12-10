@@ -14,7 +14,7 @@ public class Day08 {
                 lines,
                 (nodeName -> nodeName.equals("AAA")));
 
-        System.out.println("Day 08, Part 1: " + mapDocumentPart1.stepsToWalkTo("ZZZ"::equals));
+        //System.out.println("Day 08, Part 1: " + mapDocumentPart1.stepsToWalkTo("ZZZ"::equals));
 
         MapDocument mapDocumentPart2 = MapDocument.fromLines(
                 lines,

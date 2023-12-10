@@ -97,22 +97,82 @@ public final class MapDocument {
     public long stepsToWalkTo(Function<String, Boolean> targetSelector) {
         var currentNodes = startingNodes;
         var steps = 0L;
-        while (!allReachedTarget(currentNodes, targetSelector)) {
-            var nextDirection = directions.get((int) (steps % directions.size()));
-
-            currentNodes = currentNodes.stream()
-                    .map(currentNode -> switch (nextDirection) {
-                        case LEFT -> currentNode.getLeft();
-                        case RIGHT -> currentNode.getRight();
-                    })
+        var commonSteps = -1L;
+        var routeCache = new HashMap<String, Tuple<Long, Node<String>>>();
+        do {
+            var currentNodeResults = currentNodes.stream()
+                    .map(currentNode -> doCachedWalk(currentNode, routeCache, targetSelector))
                     .toList();
 
-            steps++;
-        }
-        return steps;
+            commonSteps = findCommonStepsToTarget(currentNodeResults);
+
+            if (commonSteps >= 0) {
+                return steps + commonSteps;
+            }
+
+            currentNodes = currentNodeResults.stream().map(Tuple::second).toList();
+
+            steps += directions.size();
+
+        } while (true);
     }
 
-    private boolean allReachedTarget(List<Node<String>> nodes, Function<String, Boolean> targetSelector) {
-        return nodes.stream().allMatch(node -> targetSelector.apply(node.getValue()));
+    private long findCommonStepsToTarget(List<Tuple<Long, Node<String>>> nodeResults) {
+        var hasUnknowns = nodeResults.stream().anyMatch(nodeResult -> nodeResult.first() < 0);
+
+        if (hasUnknowns) {
+            return -1;
+        }
+
+        var firstSteps = nodeResults.getFirst().first();
+        var allMatch = nodeResults.stream()
+                .map(Tuple::first)
+                .allMatch(steps -> steps.equals(firstSteps));
+
+        return allMatch ? firstSteps : -1;
+    }
+
+    private Tuple<Long, Node<String>> walkDirections(Node<String> startingNode, Function<String, Boolean> targetSelector) {
+        var currentNode = startingNode;
+        var stepsToTarget = -1L;
+        for (int steps = 0; steps < directions.size(); steps++) {
+            var nextDirection = getNextDirection(steps);
+            currentNode = walkTo(currentNode, nextDirection);
+
+            if (targetSelector.apply(currentNode.getName())) {
+                stepsToTarget = steps + 1;
+            }
+
+        }
+
+        return Tuple.of(stepsToTarget, currentNode);
+    }
+
+    private Direction getNextDirection(long steps) {
+        return directions.get((int) (steps % directions.size()));
+    }
+
+    private static Node<String> walkTo(Node<String> currentNode, Direction nextDirection) {
+        return switch (nextDirection) {
+            case LEFT -> currentNode.getLeft();
+            case RIGHT -> currentNode.getRight();
+        };
+    }
+
+    private static Node<String> walkTo(Node<String> start, List<Direction> directions) {
+        if (directions.isEmpty()) {
+            return start;
+        }
+        return walkTo(walkTo(start, directions.getFirst()), directions.subList(1, directions.size()));
+    }
+
+    private Tuple<Long, Node<String>> doCachedWalk(Node<String> currentNode, HashMap<String, Tuple<Long, Node<String>>> routeCache, Function<String, Boolean> targetSelector) {
+        Tuple<Long, Node<String>> cachedRoute = routeCache.get(currentNode.getName());
+        if (null == cachedRoute) {
+            cachedRoute = walkDirections(currentNode, targetSelector);
+            routeCache.put(currentNode.getName(), cachedRoute);
+            System.out.println("Cache miss for: %s -> %s".formatted(currentNode.getName(), cachedRoute));
+        }
+        return cachedRoute;
     }
 }
