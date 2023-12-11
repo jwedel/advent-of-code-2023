@@ -24,6 +24,10 @@ public record AlmanacEntry(long destinationRangeStart, long sourceRangeStart, lo
         return Optional.of(mapToTarget(sourceId));
     }
 
+    public long getLastSourceIndex() {
+        return sourceRangeStart + rangeLength - 1;
+    }
+
     private long mapToTarget(long sourceId) {
         return destinationRangeStart + (sourceId - sourceRangeStart);
     }

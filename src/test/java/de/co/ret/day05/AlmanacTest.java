@@ -3,6 +3,7 @@ package de.co.ret.day05;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,6 +57,7 @@ class AlmanacTest {
                         new AlmanacMatch("humidity-to-location", 78, 82)
                 ));
         assertThat(almanac.getLastDestinationId(79)).isEqualTo(82);
+        assertThat(almanac.findMinimumLocationId(LongStream.range(79, 80).iterator())).isEqualTo(82);
 
         assertThat(almanac.getDirectMapping(14)).isEqualTo(
                 List.of(
@@ -69,6 +71,7 @@ class AlmanacTest {
                 ));
 
         assertThat(almanac.getLastDestinationId(14)).isEqualTo(43);
+        assertThat(almanac.findMinimumLocationId(LongStream.range(14, 15).iterator())).isEqualTo(43);
 
 
         assertThat(almanac.getDirectMapping(55)).isEqualTo(
@@ -83,6 +86,7 @@ class AlmanacTest {
                 ));
 
         assertThat(almanac.getLastDestinationId(55)).isEqualTo(86);
+        assertThat(almanac.findMinimumLocationId(LongStream.range(55, 56).iterator())).isEqualTo(86);
 
 
         assertThat(almanac.getDirectMapping(13)).isEqualTo(
@@ -97,5 +101,7 @@ class AlmanacTest {
                 ));
 
         assertThat(almanac.getLastDestinationId(13)).isEqualTo(35);
+        assertThat(almanac.findMinimumLocationId(LongStream.range(13, 14).iterator())).isEqualTo(35);
+
     }
 }

@@ -32,17 +32,16 @@ public class Day05 {
         System.out.println("Day 05, Part 1: " + minimumLocationId);
 
         var seedRanges = SeedRanges.fromPairList(seeds);
-        var mergedRanges = SeedRanges.mergeRanges(seedRanges);
 
-        System.out.println(mergedRanges);
-
-        minimumLocationId = toSeedStream(mergedRanges).map(seedStream -> seedStream
-                        .map(almanac::getLastDestinationId)
-                        .reduce(Long.MAX_VALUE, Long::min))
+        var minimumLocationIdPart2 = seedRanges.stream()
+                .map(range -> LongStream.rangeClosed(
+                                range.startId(),
+                                range.getEndId())
+                        .iterator())
+                .map(almanac::findMinimumLocationId)
                 .reduce(Long.MAX_VALUE, Long::min);
 
-        System.out.println("Day 05, Part 2: " + minimumLocationId);
-
+        System.out.println("Day 05, Part 2: " + minimumLocationIdPart2);
     }
 
     private static Stream<LongStream> toSeedStream(List<SeedRange> seedRanges) {
@@ -78,14 +77,14 @@ public class Day05 {
                     if (line.trim().isEmpty()) {
                         state = CATEGORY;
                         categories.add(new AlmanacCategory(categoryName, entries));
-                    } else{
+                    } else {
                         entries.add(AlmanacEntry.parse(line));
                     }
                 }
             }
         }
 
-        if(ENTRIES.equals(state)) {
+        if (ENTRIES.equals(state)) {
             categories.add(new AlmanacCategory(categoryName, entries));
         }
 
